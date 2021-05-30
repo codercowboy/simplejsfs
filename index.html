@@ -1,0 +1,54 @@
+<html>
+<head>
+	<script src="objects.js"></script>
+	<script src="simplejsfs.js"></script>
+	<script>
+		var testFS = new CCFileSystem();
+
+		console.log("testFS", testFS);
+
+		function el(id) {
+			return document.getElementById(id);
+		}
+
+		function writeFile() {
+			var filePath = el("filePath").value;
+			var fileContents = el("fileContents").value;
+			var folderPath = CCFileUtil.dirname(filePath);
+			if (!CCStringUtil.isEmpty(folderPath)) {
+				testFS.mkdir(folderPath);
+			}
+			testFS.writeFile(filePath, fileContents);
+			console.log("Wrote file: " + filePath);
+		}
+
+		function readFile() {
+			var filePath = el("filePath").value;
+			var fileContents = testFS.readFile(filePath);
+			el("fileContents").value = fileContents;
+			console.log("Read file: " + filePath);
+		}
+
+		function listFiles() {
+			var files = CCFileSystemUtil.listAllFiles(testFS);
+			console.log("current files: " + files, files);
+			
+		}
+
+		function showFAT() {
+			console.log("Current FAT.", testFS.fat);
+		}
+	</script>
+</head>
+<body>
+	<div class='form-row'>
+		<div class='form-group col-md-12'><label class='form-label'>File Path</label><input type='text' id='filePath' /></div>
+	</div>
+	<div class='form-row'>
+		<div class='form-group col-md-12'><label class='form-label'>File Contents</label><textarea rows='10' cols='80' id='fileContents'></textarea></div>
+	</div>
+	<button onclick='writeFile();'>Write</button>
+	<button onclick='readFile();'>Read</button>
+	<button onclick='listFiles();'>List Files</button>
+	<button onclick='showFAT();'>Show Fat</button>
+</body>
